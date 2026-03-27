@@ -12,7 +12,7 @@
   <h2 class="text-center mb-4">Simulación de Servicios</h2>
 
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
       <div class="card p-3 shadow-sm">
         <h5>RRHH - Autorización</h5>
         <input type="text" id="user" class="form-control my-2" placeholder="Usuario">
@@ -22,15 +22,23 @@
       </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-4">
       <div class="card p-3 shadow-sm">
-        <h5>Bodega - Stock</h5>
-        <input type="number" id="productId" class="form-control my-2" placeholder="ID Producto">
-        <button class="btn btn-success w-100" onclick="consultarStock()">Consultar</button>
-        <div id="stockResult" class="mt-3 text-center"></div>
+        <h5>Inventario API</h5>
+        <input type="number" id="productIdApi" class="form-control my-2" placeholder="ID Producto">
+        <input type="number" id="cantidad" class="form-control my-2" placeholder="Cantidad">
+        <button class="btn btn-info w-100 mb-2" onclick="consultarInventario()">Consultar</button>
+        <button class="btn btn-warning w-100" onclick="actualizarInventario()">Actualizar</button>
+        <div id="inventarioResult" class="mt-2 text-center"></div>
       </div>
     </div>
   </div>
+
+  <div class="mt-5">
+    <h4>Listado de datos</h4>
+    <ul id="listaDatos" class="list-group"></ul>
+  </div>
+
 </div>
 
 <script src="app.js"></script>
