@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Servicios API</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Simulación de Servicios</h2>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card p-3 shadow-sm">
+        <h5>RRHH - Autorización</h5>
+        <input type="text" id="user" class="form-control my-2" placeholder="Usuario">
+        <input type="password" id="pass" class="form-control my-2" placeholder="Contraseña">
+        <button class="btn btn-primary w-100" onclick="autorizar()">Autorizar</button>
+        <div id="authResult" class="mt-3 text-center"></div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card p-3 shadow-sm">
+        <h5>Bodega - Stock</h5>
+        <input type="number" id="productId" class="form-control my-2" placeholder="ID Producto">
+        <button class="btn btn-success w-100" onclick="consultarStock()">Consultar</button>
+        <div id="stockResult" class="mt-3 text-center"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
