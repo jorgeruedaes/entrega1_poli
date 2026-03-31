@@ -1,82 +1,10 @@
+import InventarioResponse from './responses/InventarioResponse.js';
+import ActualizarInventarioResponse from './responses/ActualizarInventarioResponse.js';
+import PedidoResponse from './responses/PedidoResponse.js';
+
 const lista = document.getElementById('listaDatos');
-const PROXY = "https://cors-anywhere.herokuapp.com/";
-
-class InventarioResponse {
-  constructor(data) {
-    this.stock = data.stock;
-  }
-
-  getTexto() {
-    return `Stock: ${this.stock}`;
-  }
-
-  getMensajeLista(id) {
-    return `Inventario producto ${id}: ${this.stock}`;
-  }
-
-  getMensajeExito() {
-    return `Stock actual: ${this.stock}`;
-  }
-}
-
-class ActualizarInventarioResponse {
-  constructor(data) {
-    this.stock = data.stock;
-  }
-
-  getTexto() {
-    return `Stock actualizado: ${this.stock}`;
-  }
-
-  getMensajeLista(id) {
-    return `Actualizado producto ${id}: ${this.stock}`;
-  }
-
-  getMensajeExito() {
-    return `Nuevo stock: ${this.stock}`;
-  }
-}
-
-class PedidoResponse {
-  constructor(data) {
-    this.pedidos = data;
-  }
-
-  tieneDatos() {
-    return this.pedidos && this.pedidos.length > 0;
-  }
-
-  getHtml() {
-    let html = '';
-
-    this.pedidos.forEach(pedido => {
-      html += `
-        <div class="card mb-3 shadow-sm">
-          <div class="card-body">
-            <h6 class="mb-2">Pedido #${pedido.id}</h6>
-            <p class="mb-1"><strong>Estado:</strong> ${pedido.estado}</p>
-            <p class="mb-2"><strong>Total:</strong> $${pedido.total}</p>
-            <ul class="list-group">
-              ${pedido.detalles.map(d => `
-                <li class="list-group-item d-flex justify-content-between">
-                  <span>${d.producto_nombre} x${d.cantidad}</span>
-                  <span>$${d.subtotal}</span>
-                </li>
-              `).join('')}
-            </ul>
-          </div>
-        </div>
-      `;
-    });
-
-    return html;
-  }
-
-  getItemsLista() {
-    return this.pedidos.map(p => `Pedido ${p.id}: $${p.total}`);
-  }
-}
-
+//const PROXY = "https://cors-anywhere.herokuapp.com/";
+const PROXY = "";
 
 function limpiarLista() {
   lista.innerHTML = '';
@@ -182,3 +110,7 @@ async function consultarPedidos() {
     Swal.fire('Error', e.message || 'No hubo respuesta del servidor', 'error');
   }
 }
+
+window.consultarInventario = consultarInventario;
+window.actualizarInventario = actualizarInventario;
+window.consultarPedidos = consultarPedidos;
