@@ -1,6 +1,82 @@
-
 const lista = document.getElementById('listaDatos');
 const PROXY = "https://cors-anywhere.herokuapp.com/";
+
+class InventarioResponse {
+  constructor(data) {
+    this.stock = data.stock;
+  }
+
+  getTexto() {
+    return `Stock: ${this.stock}`;
+  }
+
+  getMensajeLista(id) {
+    return `Inventario producto ${id}: ${this.stock}`;
+  }
+
+  getMensajeExito() {
+    return `Stock actual: ${this.stock}`;
+  }
+}
+
+class ActualizarInventarioResponse {
+  constructor(data) {
+    this.stock = data.stock;
+  }
+
+  getTexto() {
+    return `Stock actualizado: ${this.stock}`;
+  }
+
+  getMensajeLista(id) {
+    return `Actualizado producto ${id}: ${this.stock}`;
+  }
+
+  getMensajeExito() {
+    return `Nuevo stock: ${this.stock}`;
+  }
+}
+
+class PedidoResponse {
+  constructor(data) {
+    this.pedidos = data;
+  }
+
+  tieneDatos() {
+    return this.pedidos && this.pedidos.length > 0;
+  }
+
+  getHtml() {
+    let html = '';
+
+    this.pedidos.forEach(pedido => {
+      html += `
+        <div class="card mb-3 shadow-sm">
+          <div class="card-body">
+            <h6 class="mb-2">Pedido #${pedido.id}</h6>
+            <p class="mb-1"><strong>Estado:</strong> ${pedido.estado}</p>
+            <p class="mb-2"><strong>Total:</strong> $${pedido.total}</p>
+            <ul class="list-group">
+              ${pedido.detalles.map(d => `
+                <li class="list-group-item d-flex justify-content-between">
+                  <span>${d.producto_nombre} x${d.cantidad}</span>
+                  <span>$${d.subtotal}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+        </div>
+      `;
+    });
+
+    return html;
+  }
+
+  getItemsLista() {
+    return this.pedidos.map(p => `Pedido ${p.id}: $${p.total}`);
+  }
+}
+
 
 function limpiarLista() {
   lista.innerHTML = '';
@@ -30,11 +106,12 @@ async function consultarInventario() {
     if (!response.ok) throw new Error('No se pudo consultar el inventario');
 
     const data = await response.json();
+    const res = new InventarioResponse(data);
 
-    result.innerHTML = `Stock: ${data.stock}`;
-    agregarLista(`Inventario producto ${id}: ${data.stock}`);
+    result.innerHTML = res.getTexto();
+    agregarLista(res.getMensajeLista(id));
 
-    Swal.fire('Consulta exitosa', `Stock actual: ${data.stock}`, 'success');
+    Swal.fire('Consulta exitosa', res.getMensajeExito(), 'success');
   } catch (e) {
     result.innerHTML = `Error`;
     Swal.fire('Error', e.message || 'No hubo respuesta del servidor', 'error');
@@ -68,11 +145,12 @@ async function actualizarInventario() {
     if (!response.ok) throw new Error('No se pudo actualizar el inventario');
 
     const data = await response.json();
+    const res = new ActualizarInventarioResponse(data);
 
-    result.innerHTML = `Stock actualizado: ${data.stock}`;
-    agregarLista(`Actualizado producto ${id}: ${data.stock}`);
+    result.innerHTML = res.getTexto();
+    agregarLista(res.getMensajeLista(id));
 
-    Swal.fire('Actualizado', `Nuevo stock: ${data.stock}`, 'success');
+    Swal.fire('Actualizado', res.getMensajeExito(), 'success');
   } catch (e) {
     result.innerHTML = `Error`;
     Swal.fire('Error', e.message || 'No hubo respuesta del servidor', 'error');
@@ -90,33 +168,13 @@ async function consultarPedidos() {
     if (!response.ok) throw new Error('No se pudieron obtener los pedidos');
 
     const data = await response.json();
+    const res = new PedidoResponse(data);
 
-    if (!data.length) throw new Error('No hay pedidos disponibles');
+    if (!res.tieneDatos()) throw new Error('No hay pedidos disponibles');
 
-    let html = '';
+    result.innerHTML = res.getHtml();
 
-    data.forEach(pedido => {
-      html += `
-        <div class="card mb-3 shadow-sm">
-          <div class="card-body">
-            <h6 class="mb-2">Pedido #${pedido.id}</h6>
-            <p class="mb-1"><strong>Estado:</strong> ${pedido.estado}</p>
-            <p class="mb-2"><strong>Total:</strong> $${pedido.total}</p>
-            <ul class="list-group">
-              ${pedido.detalles.map(d => `
-                <li class="list-group-item d-flex justify-content-between">
-                  <span>${d.producto_nombre} x${d.cantidad}</span>
-                  <span>$${d.subtotal}</span>
-                </li>
-              `).join('')}
-            </ul>
-          </div>
-        </div>
-      `;
-      agregarLista(`Pedido ${pedido.id}: $${pedido.total}`);
-    });
-
-    result.innerHTML = html;
+    res.getItemsLista().forEach(item => agregarLista(item));
 
     Swal.fire('Consulta exitosa', 'Pedidos cargados correctamente', 'success');
   } catch (e) {
